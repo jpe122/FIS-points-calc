@@ -7,7 +7,6 @@ This file contains information on calculating the fis-points of a FIS Cross Coun
  - Python3.6 or higher
 
 #### Usage
- -
 Run the *fispoints.py* file as follows:
 
     $~python3 fispoints.py <racefile.csv>
