@@ -9,7 +9,7 @@ This file contains information on calculating the fis-points of a FIS Cross Coun
 #### Usage
 Run the *fispoints.py* file as follows:
 
-    $~python3 fispoints.py <racefile.csv>
+    $~python3 fispoints.py <infile.csv> <outfile.csv>
 The csv file have to be buildt up as follows:
 
     bib,name,nsa,time,fislist-point

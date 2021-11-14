@@ -2,8 +2,9 @@ from csv import reader, writer
 from datetime import timedelta
 from sys import argv
 
+
 class Race:
-    def __init__(self, infile, Factor, min_penalty):
+    def __init__(self, infile, outfile, Factor, min_penalty):
         """Race object. Defined by race factor and race minimum penalty"""
         self.mp = min_penalty
         self.F = Factor
@@ -17,62 +18,69 @@ class Race:
         self.racedata_nohead = self.racedata[1:].copy()
         self.racedata_nohead.sort(key=lambda x: x[3])
 
-    def calculate(self, outfile):
-        """Takes output file as single argument. Returns none. Writes race data
-           with calculated fis-points to output file"""
-        
-        # Calculates penalty. See README->penalty for explanation
-        s = 0
-        koeff = 3.75
-        for row in self.racedata_nohead[:5]:
-            s += row[4]
-        penalty = s/koeff
-
-        # Appends ranks to sorted list
         for idx, row in enumerate(self.racedata_nohead):
             row.insert(0, idx+1)
+        self.racedata[0].insert(0,'rnk')
 
-        # Calculates diff time to race winner and appends new column; diff
-        for row in self.racedata_nohead:
-            diff = round(row[4] - self.racedata_nohead[0][4])
-            row.insert(-1,str(timedelta(seconds=diff)))
+        self.raced = [{self.racedata[0][idx]:ath[idx] for idx in range(len(self.racedata_nohead[0]))} for ath in self.racedata_nohead]
 
-        # Calculates race-points and adds penalty depending on penalty value
-        # See README->minimum penalty for explanation
-        for row in self.racedata_nohead:
-            fisp = (self.F*row[4])/self.racedata_nohead[0][4] - self.F
-            row.pop()
-            if penalty > self.mp:
-                row.append(round(fisp+penalty, 2))
-            else:
-                row.append(round(fisp+self.mp, 2))
+        #Run all functions to edit the race-list
+        self.add_diff()
+        self.calc_fis_points(self.penalty())
+        self.write_output(outfile)
 
-        # Convers time from seconds to hh:mm:ss.
-        for row in self.racedata_nohead:
-            row[4] = str(timedelta(seconds=row[4]))
+
+    def penalty(self):
+        """Calculates and returns race penalty. See README->penalty for more information"""
+        s = 0
+        koeff = 3.75
+        for ath in self.raced[:5]:
+            s += ath['fislist-points']
+        penalty = s/koeff
+
+        if penalty > self.mp:
+            return penalty
+        else:
+            return self.mp
+
+
+    def add_diff(self):
+        """Adds difference in time from winner to every athlete. Returns none"""
+        for ath in self.raced:
+            diff = round(ath['time'] - self.raced[0]['time'])
+            fislist_p = ath['fislist-points']
+            ath.pop('fislist-points')
+            ath['diff'] = str(timedelta(seconds=diff))
+            ath['fislist-points'] = fislist_p
+
+
+    def calc_fis_points(self, penalty):
+        """Calculates and adds fis-points to every athlete. Takes race penalty and returns none
+           See README->penalty for more information"""
+        for ath in self.raced:
+            fisp = (self.F*ath['time'])/self.raced[0]['time'] - self.F
+            ath.pop('fislist-points')
+            ath['fis-points'] = round(fisp + penalty, 2)
+
+
+    def write_output(self, outfile):
+        """Writes results to output file. Takes outfile-path and returns none"""
+        for ath in self.raced:
+            ath['time'] = str(timedelta(seconds=ath['time']))
 
         with open(outfile, 'w+', encoding='utf-8') as f:
             w = writer(f, delimiter='\t')
-
-            # Writes header to the out file
-            header = ['rnk','bib','name','nsa','time','diff','fis-points']
-            w.writerow(header)
-
-            # Writes every row in race data list without header
-            for row in self.racedata_nohead:
-                w.writerow(row)
-
-    def __str__(self, idx):
-        """Takes index as single argument. Returns indexed racer."""
-        return str(self.racedata_nohead[idx])
-
+            w.writerow(self.raced[0].keys())
+            for ath in self.raced:
+                w.writerow(ath.values())
 
 
 if __name__ == '__main__':
     # Defines race values and in file
     # See README->Factor and ->Minimum penalty for explanation
-    r1 = Race(argv[1], Factor=800, min_penalty=20)
-    r1.calculate('results.csv')
-
-    for i in r1.racedata_nohead:
-        print(i)
+    r1 = Race(argv[1], argv[2], Factor=800, min_penalty=20)
+    
+    for d in r.raced:
+        print()
+    for key, val in d.items():
+        print(f'{key} : {val}')
