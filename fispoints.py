@@ -14,8 +14,8 @@ class Race:
                 line[3] = line[3].split(':')
                 line[3] = int(line[3][0])*60*60 + int(line[3][1])*60 + float(line[3][2])
                 line[4] = float(line[4])
-            self.racedata_nohead = self.racedata[1:].copy()
-            self.racedata_nohead.sort(key=lambda x: x[3])
+        self.racedata_nohead = self.racedata[1:].copy()
+        self.racedata_nohead.sort(key=lambda x: x[3])
 
     def calculate(self, outfile):
         """Takes output file as single argument. Returns none. Writes race data
