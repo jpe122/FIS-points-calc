@@ -78,9 +78,9 @@ class Race:
 if __name__ == '__main__':
     # Defines race values and in file
     # See README->Factor and ->Minimum penalty for explanation
-    r1 = Race(argv[1], argv[2], Factor=800, min_penalty=20)
+    r = Race(argv[1], argv[2], Factor=800, min_penalty=20)
     
     for d in r.raced:
         print()
-    for key, val in d.items():
-        print(f'{key} : {val}')
+        for key, val in d.items():
+            print(f'{key} : {val}')
