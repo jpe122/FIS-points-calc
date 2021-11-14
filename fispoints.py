@@ -2,6 +2,8 @@ from csv import reader, writer
 from datetime import timedelta
 from sys import argv
 
+
+#Hello
 class Race:
     def __init__(self, infile, Factor, min_penalty):
         """Race object. Defined by race factor and race minimum penalty"""
