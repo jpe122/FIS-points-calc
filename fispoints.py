@@ -8,13 +8,18 @@ class Race:
         """Race object. Defined by race factor and race minimum penalty"""
         self.mp = min_penalty
         self.F = Factor
-        with open(infile, 'r', encoding='utf-8') as f:
-            data = reader(f, delimiter=',')
-            self.racedata = list(data)
-            for line in self.racedata[1:]:
-                line[3] = line[3].split(':')
-                line[3] = int(line[3][0])*60*60 + int(line[3][1])*60 + float(line[3][2])
-                line[4] = float(line[4])
+        try:
+            with open(infile, 'r', encoding='utf-8') as f:
+                data = reader(f, delimiter=',')
+                self.racedata = list(data)
+                for line in self.racedata[1:]:
+                    line[3] = line[3].split(':')
+                    line[3] = int(line[3][0])*60*60 + int(line[3][1])*60 + float(line[3][2])
+                    line[4] = float(line[4])
+        except FileNotFoundError:
+            print(f'\033[091mFile: "{infile}" not found\033[0m')
+            exit(-1)
+
         self.racedata_nohead = self.racedata[1:].copy()
         self.racedata_nohead.sort(key=lambda x: x[3])
 
@@ -78,9 +83,9 @@ class Race:
 if __name__ == '__main__':
     # Defines race values and in file
     # See README->Factor and ->Minimum penalty for explanation
-    r = Race(argv[1], argv[2], Factor=800, min_penalty=20)
-    
-    for d in r.raced:
-        print()
-        for key, val in d.items():
-            print(f'{key} : {val}')
+    try:
+        r = Race(argv[1], argv[2], Factor=800, min_penalty=20)
+        print(f'\033[92mResults successfully written to "{argv[2]}"\033[0m')
+    except IndexError:
+        print('\033[91mIncorrect usage. Use the program as follows:\033[0m')
+        print('python3 fispoints.py <infile.csv> <outfile.csv>')
