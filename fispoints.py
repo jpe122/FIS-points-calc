@@ -12,10 +12,16 @@ class Race:
             with open(infile, 'r', encoding='utf-8') as f:
                 data = reader(f, delimiter=',')
                 self.racedata = list(data)
-                for line in self.racedata[1:]:
-                    line[3] = line[3].split(':')
-                    line[3] = int(line[3][0])*60*60 + int(line[3][1])*60 + float(line[3][2])
-                    line[4] = float(line[4])
+
+            # Strip whitespace
+            for line in self.racedata:
+                for i in range(len(line)):
+                    line[i] = line[i].strip()
+
+            for line in self.racedata[1:]:
+                line[3] = line[3].split(':')
+                line[3] = int(line[3][0])*60*60 + int(line[3][1])*60 + float(line[3][2])
+                line[4] = float(line[4])
         except FileNotFoundError:
             print(f'\033[091mFile: "{infile}" not found\033[0m')
             exit(-1)
@@ -27,9 +33,12 @@ class Race:
             row.insert(0, idx+1)
         self.racedata[0].insert(0,'rnk')
 
+        # Sorted list of dictionaries. Sorted based on finish time.
+        # Every dictionary represents its own racer
         self.raced = [{self.racedata[0][idx]:ath[idx] for idx in range(len(self.racedata_nohead[0]))} for ath in self.racedata_nohead]
 
-        #Run all functions to edit the race-list
+
+        # Run all functions to edit the race-list
         self.add_diff()
         self.calc_fis_points(self.penalty())
         self.write_output(outfile)
@@ -37,11 +46,17 @@ class Race:
 
     def penalty(self):
         """Calculates and returns race penalty. See README->penalty for more information"""
-        s = 0
         koeff = 3.75
+
+        # top five from race results
+        top5 = []
         for ath in self.raced[:5]:
-            s += ath['fislist-points']
-        penalty = s/koeff
+            top5.append(ath['fislist-points'])
+        top5.sort()
+
+        # the three with the best fis-list points among the top 5 finishers
+        top3 = top5[:3]
+        penalty = sum(top3)/koeff
 
         if penalty > self.mp:
             return penalty
