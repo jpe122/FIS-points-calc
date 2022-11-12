@@ -1,27 +1,35 @@
 # Rules for calculating fis points
+
 ___
-### Information
+
+## Information
+
 This file contains information on calculating the fis-points of a FIS Cross Country race. Use the *fispoints.py* file to calculate the fis-points.
 
-#### Requirements
- - Python3.6 or higher
+### Requirements
 
-#### Usage
+- Python3.6 or higher
+
+## Usage
+
+Create race csv file as follows:
+
+    $~python3 create_race.py <outfile.csv> --option
+
 Run the *fispoints.py* file as follows:
 
     $~python3 fispoints.py <infile.csv> <outfile.csv>
-The csv file have to be buildt up as follows:
+The csv file have to be built up as follows:
 
     bib,name,nsa,time,fislist-point
 
 The program will write the a sorted, ranked list of racers with the racers competition fis-points
 
-
 ## Race points formula
+
 $$ P_{race} = \frac{F \cdot T_x}{T_o} -F $$
 $$or$$
 $$P_{race} = (\frac{T_x}{T_o}-1)\cdot F$$
-
 
     P  = Race points 
     Tx = Time of the classified competitor in seconds
@@ -29,6 +37,7 @@ $$P_{race} = (\frac{T_x}{T_o}-1)\cdot F$$
     F  = Competition factor
 
 ## Factor
+
 | Competition                               | Factor |
 |-------------------------------------------|--------|
 | Interval start                            | 800    |
@@ -36,6 +45,7 @@ $$P_{race} = (\frac{T_x}{T_o}-1)\cdot F$$
 | Mass start and Skiathlon                  | 1400   |
 
 ## Penalty
+
 Every race is given a specific penalty based on the status of the race and the competitors.
 
 The FIS points of the top five competitors from the actual
@@ -44,8 +54,8 @@ and divided by 3.75.
 $$p = \frac{\sum_{i=1}^3 a_i}{3.75}$$
 $a_i$ = the three best fis-ranked racers among the top five finishers
 
-
 ### Minimum penalty
+
 |     Competition                 | Men | Women |
 |---------------------------------|-----|-------|
 | U23 World Championships         | 25  | 25    |
@@ -54,13 +64,12 @@ $a_i$ = the three best fis-ranked racers among the top five finishers
 | Junior COC and FIS competitions | 35  | 35    |
 | EYOF                            | 60  | 60    |
 
- - If the calculated penalty is higher than the
+- If the calculated penalty is higher than the
 minimum penalty , the calculated penalty will be
-applied to the race.<br/>
+applied to the race.
 
- - If the calculated penalty is less than the minimum penalty, the
-minimum penalty will be applied to the race.<br/>
-
+- If the calculated penalty is less than the minimum penalty, the
+minimum penalty will be applied to the race.
 
 ## Final calculation
 

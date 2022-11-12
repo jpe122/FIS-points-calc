@@ -13,11 +13,15 @@ class Race:
                 data = reader(f, delimiter=',')
                 self.racedata = list(data)
 
-            # Strip whitespace
+            # Strip whitespace and remove empty lines
             for line in self.racedata:
-                for i in range(len(line)):
-                    line[i] = line[i].strip()
+                if line:
+                    for i in range(len(line)):
+                        line[i] = line[i].strip()
+                else:
+                    self.racedata.remove(line)
 
+            # convert time and fis points to float
             for line in self.racedata[1:]:
                 line[3] = line[3].split(':')
                 line[3] = int(line[3][0])*60*60 + int(line[3][1])*60 + float(line[3][2])
@@ -98,9 +102,13 @@ class Race:
 if __name__ == '__main__':
     # Defines race values and in file
     # See README->Factor and ->Minimum penalty for explanation
+    print(argv[1])
     try:
-        r = Race(argv[1], argv[2], Factor=800, min_penalty=20)
-        print(f'\033[92mResults successfully written to "{argv[2]}"\033[0m')
+        infile = argv[1]
+        outfile = argv[2]
     except IndexError:
         print('\033[91mIncorrect usage. Use the program as follows:\033[0m')
         print('python3 fispoints.py <infile.csv> <outfile.csv>')
+    finally:
+        r = Race(infile, outfile, Factor=800, min_penalty=20)
+        print(f'\033[92mResults successfully written to "{argv[2]}"\033[0m')
