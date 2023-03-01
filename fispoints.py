@@ -4,10 +4,14 @@ from sys import argv
 
 
 class Race:
-    def __init__(self, infile, outfile, Factor, min_penalty):
+    def __init__(self, infile: str, outfile: str, factor: int, min_penalty: int) -> None:
         """Race object. Defined by race factor and race minimum penalty"""
+        print(f'infile: {infile}')
+        print(f'outfile: {outfile}')
+        print(f'factor: {factor}')
+        print(f'penalty: {min_penalty}')
         self.mp = min_penalty
-        self.F = Factor
+        self.F = factor
         try:
             with open(infile, 'r', encoding='utf-8') as f:
                 data = reader(f, delimiter=',')
@@ -48,7 +52,7 @@ class Race:
         self.write_output(outfile)
 
 
-    def penalty(self):
+    def penalty(self) -> int:
         """Calculates and returns race penalty. See README->penalty for more information"""
         koeff = 3.75
 
@@ -68,7 +72,7 @@ class Race:
             return self.mp
 
 
-    def add_diff(self):
+    def add_diff(self) -> None:
         """Adds difference in time from winner to every athlete. Returns none"""
         for ath in self.raced:
             diff = round(ath['time'] - self.raced[0]['time'])
@@ -78,7 +82,7 @@ class Race:
             ath['fislist-points'] = fislist_p
 
 
-    def calc_fis_points(self, penalty):
+    def calc_fis_points(self, penalty: int) -> None:
         """Calculates and adds fis-points to every athlete. Takes race penalty and returns none
            See README->penalty for more information"""
         for ath in self.raced:
@@ -87,7 +91,7 @@ class Race:
             ath['fis-points'] = round(fisp + penalty, 2)
 
 
-    def write_output(self, outfile):
+    def write_output(self, outfile: str) -> None:
         """Writes results to output file. Takes outfile-path and returns none"""
         for ath in self.raced:
             ath['time'] = str(timedelta(seconds=ath['time']))
@@ -101,7 +105,7 @@ class Race:
 
 if __name__ == '__main__':
     # Defines race values and in file
-    # See README->Factor and ->Minimum penalty for explanation
+    # See README->factor and ->Minimum penalty for explanation
     print(argv[1])
     try:
         infile = argv[1]
@@ -110,5 +114,5 @@ if __name__ == '__main__':
         print('\033[91mIncorrect usage. Use the program as follows:\033[0m')
         print('python3 fispoints.py <infile.csv> <outfile.csv>')
     finally:
-        r = Race(infile, outfile, Factor=800, min_penalty=20)
+        r = Race(infile, outfile, factor=800, min_penalty=20)
         print(f'\033[92mResults successfully written to "{argv[2]}"\033[0m')

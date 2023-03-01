@@ -1,4 +1,4 @@
-# Rules for calculating fis points
+# Calculating FIS points
 
 ___
 
@@ -9,6 +9,40 @@ This file contains information on calculating the fis-points of a FIS Cross Coun
 ### Requirements
 
 - Python3.6 or higher
+
+## Calculation summary
+
+FIS points for individual competitions are calculated based on a *factor*, a *penalty* and time behind the winner. The factor is a fixed value based on competition type. The penalty is calculated based on the **three best ranked** (latest official FIS-list rank) of the **five best finishers**.
+
+Every race is assigned a minimum penalty based on the *race importance* where normal senior FIS competitions have a minimum penalty of 20 points. The individual race points will be the sum of the penalty and the calculated points based on time behind winner and the factor. I.E. the race winner's points will be the penalty (either calculated or minimum penalty).
+
+## FIS-list
+
+FIS points earned by a competitor are valid for 365 days.
+
+### Distance (longer than Sprint)
+
+A competitor's points will be the average of his or her best five results
+in distance competitions over the period of the last twelve months.
+
+### Sprint
+
+A competitor's points will be the average of his or her best five results
+in sprint competitions over the period of the last twelve months.
+
+### Less than 5 results
+
+A competitor's Sprint FIS points and Distance FIS points represent
+the average of the best 5 valid results for each format. If the
+competitor has less than 5 valid results the average will be adjusted
+according to the following table, but with a minimum of 4 FIS points:
+
+| Less than 5 results                   |
+|---------------------------------------|
+| best 4 results x 1.1 = FIS points     |
+| best 3 results x 1.2 = FIS points     |
+| best 2 results x 1.3 = FIS points     |
+| best 1 results x 1.4 = FIS points     |
 
 ## Usage
 
